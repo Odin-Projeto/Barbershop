@@ -1,0 +1,25 @@
+const config = {
+  endOfLine: "lf",
+  arrowParens: "always",
+  printWidth: 80,
+  tabWidth: 2,
+  singleQuote: true,
+  semi: true,
+  bracketSpacing: true,
+  insertPragma: false,
+  singleAttributePerLine: false,
+  bracketSameLine: false,
+  jsxBracketSameLine: false,
+  jsxSingleQuote: true,
+  proseWrap: "preserve",
+  quoteProps: "as-needed",
+  requirePragma: false,
+  trailingComma: "es5",
+  useTabs: false,
+  embeddedLanguageFormatting: "auto",
+  vueIndentScriptAndStyle: false,
+  experimentalTernaries: false,
+  parser: "typescript",
+};
+
+export default config;
