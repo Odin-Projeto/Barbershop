@@ -1,6 +1,6 @@
 const config = {
-  endOfLine: "lf",
-  arrowParens: "always",
+  endOfLine: 'lf',
+  arrowParens: 'always',
   printWidth: 80,
   tabWidth: 2,
   singleQuote: true,
@@ -11,15 +11,15 @@ const config = {
   bracketSameLine: false,
   jsxBracketSameLine: false,
   jsxSingleQuote: true,
-  proseWrap: "preserve",
-  quoteProps: "as-needed",
+  proseWrap: 'preserve',
+  quoteProps: 'as-needed',
   requirePragma: false,
-  trailingComma: "es5",
+  trailingComma: 'es5',
   useTabs: false,
-  embeddedLanguageFormatting: "auto",
+  embeddedLanguageFormatting: 'auto',
   vueIndentScriptAndStyle: false,
   experimentalTernaries: false,
-  parser: "typescript",
+  parser: 'typescript',
 };
 
 export default config;
