@@ -49,15 +49,29 @@ export default {
       '9xl': '6rem',
     },
     extend: {
+      blur: {
+        '4xl': '64px',
+        '5xl': '80px',
+      },
+      boxShadow: {
+        xs: '0px 0px 4px 0px',
+      },
       colors: {
         'gray-25': '#FCFCFD',
         'gray-300': '#D0D5DD',
         'gray-500': '#667085',
         'gray-600': '#475467',
         'gray-800': '#1D2939',
+        'green-200': '#a6f4c5',
         'green-400': '#32D583',
+        'green-500': '#12B76A',
+        'orange-200': '#fddcab',
+        'orange-300': '#F79009',
         'orange-400': '#FD853A',
+        'red-200': '#fecdca',
         'red-400': '#F97066',
+        'yellow-200': '#ffdfa5',
+        'yellow-400': '#FDB022',
       },
       borderRadius: {
         px: '1px',
