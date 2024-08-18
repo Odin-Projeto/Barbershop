@@ -49,6 +49,16 @@ export default {
       '9xl': '6rem',
     },
     extend: {
+      colors: {
+        'gray-25': '#FCFCFD',
+        'gray-300': '#D0D5DD',
+        'gray-500': '#667085',
+        'gray-600': '#475467',
+        'gray-800': '#1D2939',
+        'green-400': '#32D583',
+        'orange-400': '#FD853A',
+        'red-400': '#F97066',
+      },
       borderRadius: {
         px: '1px',
         xs: '4px',
