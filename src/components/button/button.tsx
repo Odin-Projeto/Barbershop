@@ -39,7 +39,7 @@ export function Button({
   return (
     <button
       {...props}
-      className={`rounded-xl flex items-center text-md text-gray-800 font-bold ${variantStyle[variant]} ${sizeStyle[size]}${additionalClasses}`}
+      className={`rounded-xl flex items-center text-md justify-center text-gray-800 font-bold ${variantStyle[variant]} ${sizeStyle[size]}${additionalClasses}`}
     >
       {children}
     </button>
