@@ -30,8 +30,8 @@ export function Field({ name = '', mask = undefined, ...props }: FieldProps) {
         {...register(name)}
         {...props}
         id={name}
-        type={showPassword ? 'text' : 'password'}
-        className={`text-sm bg-gray-500 rounded-xl text-gray-300 border border-gray-600 h-10 p-4 disabled:opacity-80 ${additionalClasses}`}
+        type={showPassword ? 'password' : 'text'}
+        className={`text-sm bg-gray-500 rounded-xl text-gray-300 border border-gray-600 h-10 w-full p-4 disabled:opacity-80 ${additionalClasses}`}
       />
 
       {props.type === 'password' && (
