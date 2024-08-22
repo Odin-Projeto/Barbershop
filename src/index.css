@@ -6,4 +6,10 @@
   html {
     font-family: "Work Sans", sans-serif;
   }
+  body {
+    background: rgba(29, 41, 57, 1);
+  }
+  html, body, div#root {
+    height: 100%;
+  }
 }
