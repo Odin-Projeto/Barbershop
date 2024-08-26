@@ -3,7 +3,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Input } from '../../components/input';
 import { Button } from '../../components/button/button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const loginFormSchema = z.object({
   email: z.string(),
@@ -16,10 +16,19 @@ export function Login() {
   const loginForm = useForm<LoginData>({
     resolver: zodResolver(loginFormSchema),
   });
+  const { handleSubmit } = loginForm;
+  const navigate = useNavigate();
+
+  function handleAuthenticate() {
+    navigate('home');
+  }
 
   return (
     <FormProvider {...loginForm}>
-      <form className='p-4 h-full flex flex-col'>
+      <form
+        className='p-4 h-full flex flex-col'
+        onSubmit={handleSubmit(handleAuthenticate)}
+      >
         <div className='flex flex-col text-gray-25 mt-4 items-center'>
           <h4 className='text-center'>log in</h4>
           <img className='mt-14' src='odin.png' alt='' width={80} height={80} />
@@ -49,7 +58,9 @@ export function Login() {
             Esqueceu sua senha?
           </Link>
         </div>
-        <Button className='mt-10 w-full'>Acessar conta</Button>
+        <Button className='mt-10 w-full' type='submit'>
+          Acessar conta
+        </Button>
         <div className='mt-auto pt-10 text-center'>
           <span className='font-light text-gray-25'>Não possui uma conta?</span>{' '}
           <Link
