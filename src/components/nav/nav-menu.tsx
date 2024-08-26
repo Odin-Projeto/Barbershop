@@ -26,7 +26,7 @@ export function NavMenu() {
         </NavLink>
         <div className='bg-gray-800 h-fit p-2 flex rounded-full -mt-10'>
           <NavLink
-            to={''}
+            to={'new-schedule'}
             className='bg-orange-400 rounded-full flex items-center justify-center h-14 w-14 shadow-sm shadow-orange-200/50'
           >
             <AddIcon height={24} />
