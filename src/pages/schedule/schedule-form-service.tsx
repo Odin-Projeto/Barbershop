@@ -21,6 +21,14 @@ export function ScheduleFormService() {
     <FormProvider {...serviceSelectionForm}>
       <form onSubmit={handleSubmit(handleSelectService)}>
         <Input.Root>
+          <Input.Label>Serviço</Input.Label>
+          <Input.Field name='value' />
+        </Input.Root>
+        <Input.Root>
+          <Input.Label>Profissional</Input.Label>
+          <Input.Field name='value' />
+        </Input.Root>
+        <Input.Root>
           <Input.Label>Valor</Input.Label>
           <Input.Field name='value' />
         </Input.Root>
@@ -28,7 +36,7 @@ export function ScheduleFormService() {
           <Input.Label>Comissão profissional </Input.Label>
           <Input.Field name='value' />
         </Input.Root>
-        <Button>Avançar para o calendário</Button>
+        <Button>Avançar etapa</Button>
       </form>
     </FormProvider>
   );
