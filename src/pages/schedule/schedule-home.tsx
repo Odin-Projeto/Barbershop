@@ -33,7 +33,7 @@ export function ScheduleHome() {
     day_button: `group-data-[today=true]:bg-orange-400 group-data-[today=true]:font-bold w-min text-gray-25 py-[2px] px-1 rounded-xs`,
     caption_label: `flex justify-center uppercase`,
     selected: `border border-gray-500 rounded-xxs`,
-    root: `${defaultClassNames.root} shadow-lg text-gray-50 mt-20`,
+    root: `${defaultClassNames.root} text-gray-50 mt-20`,
     chevron: `${defaultClassNames.chevron} fill-amber-500`,
   };
 
