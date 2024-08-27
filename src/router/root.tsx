@@ -4,6 +4,7 @@ import { Login } from '../pages/sign-in/login';
 import { ScheduleForm } from '../pages/schedule/schedule-form';
 import { PageNotFound } from '../pages/error/page-not-found';
 import { ScheduleHome } from '../pages/schedule/schedule-home';
+import { ProfileSettings } from '../pages/settings/profile-settings';
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ export const router = createBrowserRouter([
       {
         path: '/home',
         element: <ScheduleHome />,
+      },
+      {
+        path: '/settings',
+        element: <ProfileSettings />,
       },
     ],
   },
