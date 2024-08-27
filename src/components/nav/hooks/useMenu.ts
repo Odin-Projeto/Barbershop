@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 const matchingRoute = {
   home: '/home',
   scheduleDetails: '/schedule-details',
+  newSchedule: '/new-schedule',
 };
 
 export function useMenu() {
@@ -12,8 +13,10 @@ export function useMenu() {
     () => Object.values(matchingRoute).some((route) => route === pathname),
     [pathname, matchingRoute]
   );
+  const isVisibleCenterButton = pathname === matchingRoute.home;
 
   return {
     isVisible,
+    isVisibleCenterButton,
   };
 }

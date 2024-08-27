@@ -5,7 +5,7 @@ import { useMenu } from './hooks/useMenu';
 import { NavLink } from 'react-router-dom';
 
 export function NavMenu() {
-  const { isVisible } = useMenu();
+  const { isVisible, isVisibleCenterButton } = useMenu();
 
   if (!isVisible) return;
 
@@ -24,19 +24,21 @@ export function NavMenu() {
           <HomeIcon className='h-8' />
           Home
         </NavLink>
-        <div className='bg-gray-800 h-fit p-2 flex rounded-full -mt-10'>
+        <div
+          className={[
+            'bg-gray-800 h-fit p-2 flex rounded-full -mt-10',
+            !isVisibleCenterButton ? 'invisible' : undefined,
+          ].join(' ')}
+        >
           <NavLink
             to={'new-schedule'}
-            className='bg-orange-400 rounded-full flex items-center justify-center h-14 w-14 shadow-sm shadow-orange-200/50'
+            className='bg-orange-400 rounded-full flex items-center justify-center h-14 w-14 shadow-sm shadow-orange-200/50 fill-slate-800'
           >
             <AddIcon height={24} />
           </NavLink>
         </div>
         <NavLink
-          to={'schedule'}
-          state={{
-            teste: 'oiiiii',
-          }}
+          to={'/settings'}
           className={({ isActive }) =>
             [
               'text-xs text-gray-400 fill-gray-400',
