@@ -5,6 +5,8 @@ const matchingRoute = {
   home: '/home',
   scheduleDetails: '/schedule-details',
   newSchedule: '/new-schedule',
+  confirmSchedule: '/confirm-schedule',
+  confirmedSchedule: '/confirmed-schedule',
 };
 
 export function useMenu() {
