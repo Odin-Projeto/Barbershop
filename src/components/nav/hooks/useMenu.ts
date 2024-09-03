@@ -7,6 +7,7 @@ const matchingRoute = {
   newSchedule: '/new-schedule',
   confirmSchedule: '/confirm-schedule',
   confirmedSchedule: '/confirmed-schedule',
+  settings: '/settings',
 };
 
 export function useMenu() {
