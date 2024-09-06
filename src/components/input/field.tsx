@@ -1,14 +1,22 @@
-import { InputHTMLAttributes, useEffect, useState } from 'react';
+import { InputHTMLAttributes, useEffect, useRef, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import Eye from '../../assets/eye.svg?react';
 import EyeHideIcon from '../../assets/eye_slash.svg?react';
 
 type FieldProps = InputHTMLAttributes<HTMLInputElement> & {
   mask?: (value?: string) => string;
+  autoFocus?: boolean;
 };
 
-export function Field({ name = '', mask = undefined, ...props }: FieldProps) {
+export function Field({
+  name = '',
+  mask = undefined,
+  autoFocus = undefined,
+  ...props
+}: FieldProps) {
   const { register, setValue } = useFormContext();
+  const { ref, ...rest } = register('firstName');
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const inputValue: string = useWatch({ name });
   const passwordClasses = props.type === 'password' ? 'pr-10' : '';
   const additionalClasses = passwordClasses;
@@ -19,6 +27,12 @@ export function Field({ name = '', mask = undefined, ...props }: FieldProps) {
   }
 
   useEffect(() => {
+    if (autoFocus) {
+      inputRef.current?.focus();
+    }
+  }, []);
+
+  useEffect(() => {
     if (mask) {
       setValue(name, mask(inputValue));
     }
@@ -27,7 +41,11 @@ export function Field({ name = '', mask = undefined, ...props }: FieldProps) {
   return (
     <div className='flex relative items-center'>
       <input
-        {...register(name)}
+        {...rest}
+        ref={(e) => {
+          ref(e);
+          inputRef.current = e;
+        }}
         {...props}
         id={name}
         type={showPassword ? 'password' : 'text'}
