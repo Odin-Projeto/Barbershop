@@ -7,6 +7,7 @@ import { ScheduleHome } from '../pages/schedule/schedule-home';
 import { ProfileSettings } from '../pages/settings/profile-settings';
 import { ConfirmSchedule } from '../pages/schedule/confirm-schedule';
 import { ConfirmedSchedule } from '../pages/schedule/confirmed-schedule';
+import { Search } from '../pages/schedule/search';
 
 export const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ export const router = createBrowserRouter([
       {
         path: '/confirmed-schedule',
         element: <ConfirmedSchedule />,
+      },
+      {
+        path: '/search-schedules',
+        element: <Search />,
       },
     ],
   },
