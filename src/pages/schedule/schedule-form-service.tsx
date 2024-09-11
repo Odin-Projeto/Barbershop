@@ -30,7 +30,7 @@ export function ScheduleFormService() {
         className='flex flex-col h-full'
         onSubmit={handleSubmit(handleSelectService)}
       >
-        <div className='flex p-4 items-center gap-4'>
+        <div className='p-4 flex items-center gap-2 fixed bg-gray-800 w-full left-0 z-10'>
           <button
             className='bg-gray-600 rounded-full p-1'
             type='button'
@@ -40,13 +40,13 @@ export function ScheduleFormService() {
           </button>
           <h1 className='text-gray-25'>Novo agendamento</h1>
         </div>
-        <div className='p-4 flex flex-col gap-4'>
+        <div className='pt-18 p-4 flex flex-col gap-4 relative'>
           <p className='text-gray-25'>
             Defina as informações do serviço realizado
           </p>
           <Input.Root>
             <Input.Label>Serviço</Input.Label>
-            <Input.Field name='value' />
+            <Input.Field name='value' autoFocus />
           </Input.Root>
           <Input.Root>
             <Input.Label>Profissional</Input.Label>

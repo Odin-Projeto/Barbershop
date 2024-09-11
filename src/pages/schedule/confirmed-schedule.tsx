@@ -12,7 +12,7 @@ export function ConfirmedSchedule() {
 
   return (
     <div className='flex flex-col h-full'>
-      <div className='flex p-4 items-center gap-4 fixed bg-gray-800 w-full z-10 left-0'>
+      <div className='p-4 flex items-center gap-2 fixed bg-gray-800 w-full left-0 z-10'>
         <button
           className='bg-gray-600 rounded-full p-1'
           type='button'
