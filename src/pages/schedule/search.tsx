@@ -1,5 +1,6 @@
 import { FormProvider, useForm } from 'react-hook-form';
 import ArrowLeft from '../../assets/arrow_left.svg?react';
+import ArrowRight from '../../assets/arrow_right.svg?react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
 
@@ -43,8 +44,21 @@ export function Search() {
         <section className='flex p-4 mt-16'>
           <ul className='flex-1'>
             <li className=''>
-              <button className='bg-gray-600 rounded-xl w-full p-4'>
-                <span>11:35</span>
+              <span className='text-gray-100 text-sm'>
+                qui, 11 de abr de 2024
+              </span>
+              <button className='mt-2 bg-gray-600 rounded-xl w-full p-4 hover:bg-slate-700 hover:pr-5 ease-in duration-300'>
+                <div className='flex flex-col text-gray-25'>
+                  <div className='flex gap-4 items-center'>
+                    <span className=''>11:45</span>
+                    <div className='w-[3px] h-4 bg-green-400 rounded'></div>
+                    <span>Felipe Rodrigo</span>
+                    <ArrowRight className='h-3 ml-auto fill-orange-400' />
+                  </div>
+                </div>
+                <div className='pl-18 text-sm text-gray-25 text-left'>
+                  Nome do serviço realizado
+                </div>
               </button>
             </li>
           </ul>
