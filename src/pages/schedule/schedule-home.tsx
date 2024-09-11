@@ -49,8 +49,7 @@ export function ScheduleHome() {
           <button
             className='fill-gray-50 rounded-full bg-gray-500 p-1'
             onClick={() => {
-              console.log('console');
-              navigate('/schedule-search');
+              navigate('/search-schedules');
             }}
           >
             <SearchIcon height={24} />
