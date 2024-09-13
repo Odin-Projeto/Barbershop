@@ -7,6 +7,8 @@ import {
 } from './hooks/useScheduleFormContext';
 import ArrowLeft from '../../assets/arrow_left.svg?react';
 import { useNavigate } from 'react-router-dom';
+import { Select } from '../../components/input/select-field';
+import ArrowDropDown from './../../assets/arrow_drop_down.svg?react';
 
 export function ScheduleFormService() {
   const { step, handleNextStep } = useScheduleFormContext();
@@ -14,7 +16,8 @@ export function ScheduleFormService() {
   const { handleSubmit } = serviceSelectionForm;
   const navigate = useNavigate();
 
-  function handleSelectService() {
+  function handleSelectService(data) {
+    console.log(data);
     handleNextStep();
   }
 
@@ -44,21 +47,47 @@ export function ScheduleFormService() {
           <p className='text-gray-25'>
             Defina as informações do serviço realizado
           </p>
-          <Input.Root>
-            <Input.Label>Serviço</Input.Label>
-            <Input.Field name='value' autoFocus />
-          </Input.Root>
-          <Input.Root>
-            <Input.Label>Profissional</Input.Label>
-            <Input.Field name='value' />
-          </Input.Root>
+          <Select.Root>
+            <Select.Label>Serviço</Select.Label>
+            <Select.Field name='service'>
+              <Select.Trigger>
+                <ArrowDropDown className='h-5 fill-gray-300' />
+              </Select.Trigger>
+              <Select.Content>
+                <Select.Item
+                  value={JSON.stringify({ title: 123, value: 1234 })}
+                  className='p-1 outline-0 rounded hover:bg-gray-600 hover:cursor-pointer text-gray-25'
+                >
+                  <Select.ItemText>Barba</Select.ItemText>
+                  <Select.ItemIndicator>…</Select.ItemIndicator>
+                </Select.Item>
+              </Select.Content>
+            </Select.Field>
+          </Select.Root>
+          <Select.Root>
+            <Select.Label>Profissional</Select.Label>
+            <Select.Field name='professional'>
+              <Select.Trigger>
+                <ArrowDropDown className='h-5 fill-gray-300' />
+              </Select.Trigger>
+              <Select.Content>
+                <Select.Item
+                  value={JSON.stringify({ title: 123, value: 1234 })}
+                  className='p-1 outline-0 rounded hover:bg-gray-600 hover:cursor-pointer text-gray-25'
+                >
+                  <Select.ItemText>João da Silva</Select.ItemText>
+                  <Select.ItemIndicator>…</Select.ItemIndicator>
+                </Select.Item>
+              </Select.Content>
+            </Select.Field>
+          </Select.Root>
           <Input.Root>
             <Input.Label>Valor</Input.Label>
             <Input.Field name='value' />
           </Input.Root>
           <Input.Root>
             <Input.Label>Comissão profissional </Input.Label>
-            <Input.Field name='value' />
+            <Input.Field name='commission' />
           </Input.Root>
         </div>
         <div className='p-4 pb-18 flex flex-1 items-end'>

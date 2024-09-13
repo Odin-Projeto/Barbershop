@@ -4,8 +4,10 @@ import {
   useScheduleFormContext,
 } from './hooks/useScheduleFormContext';
 import ArrowLeft from '../../assets/arrow_left.svg?react';
+import ArrowDropDown from '../../assets/arrow_drop_down.svg?react';
 import { Input } from '../../components/input';
 import { Button } from '../../components/button/button';
+import { Select } from '../../components/input/select-field';
 
 export function ScheduleFormTime() {
   const { step, handlePrevStep } = useScheduleFormContext();
@@ -45,10 +47,23 @@ export function ScheduleFormTime() {
             <Input.Label>Horário</Input.Label>
             <Input.Field name='value' />
           </Input.Root>
-          <Input.Root>
-            <Input.Label>Duração do serviço</Input.Label>
-            <Input.Field name='value' />
-          </Input.Root>
+          <Select.Root>
+            <Select.Label>Duração</Select.Label>
+            <Select.Field name='duration'>
+              <Select.Trigger>
+                <ArrowDropDown className='h-5 fill-gray-300' />
+              </Select.Trigger>
+              <Select.Content>
+                <Select.Item
+                  value={JSON.stringify({ title: 123, value: 1234 })}
+                  className='p-1 outline-0 rounded hover:bg-gray-600 hover:cursor-pointer text-gray-25'
+                >
+                  <Select.ItemText>45 minutos</Select.ItemText>
+                  <Select.ItemIndicator>…</Select.ItemIndicator>
+                </Select.Item>
+              </Select.Content>
+            </Select.Field>
+          </Select.Root>
         </div>
         <div className='p-4'>
           <Button className='w-full' type='submit'>
