@@ -5,9 +5,10 @@ import {
 } from './hooks/useScheduleFormContext';
 import ArrowLeft from '../../assets/arrow_left.svg?react';
 import ArrowDropDown from '../../assets/arrow_drop_down.svg?react';
-import { Input } from '../../components/input';
+import Timer from '../../assets/timer.svg?react';
 import { Button } from '../../components/button/button';
 import { Select } from '../../components/input/select-field';
+import { DatePicker } from '../../components/input/datepicker';
 
 export function ScheduleFormTime() {
   const { step, handlePrevStep } = useScheduleFormContext();
@@ -24,8 +25,11 @@ export function ScheduleFormTime() {
 
   return (
     <FormProvider {...timeSelectionForm}>
-      <form onSubmit={handleSubmit(handleSelectTime)}>
-        <div className='flex p-4 items-center gap-4'>
+      <form
+        onSubmit={handleSubmit(handleSelectTime)}
+        className='flex flex-col h-full'
+      >
+        <div className='p-4 flex items-center gap-2 fixed bg-gray-800 w-full left-0 z-10'>
           <button
             className='bg-gray-600 rounded-full p-1'
             type='button'
@@ -39,14 +43,27 @@ export function ScheduleFormTime() {
           <p className='text-gray-25'>
             Defina informações sobre a data e hora do agendamento
           </p>
-          <Input.Root>
-            <Input.Label>Data</Input.Label>
-            <Input.Field name='value' />
-          </Input.Root>
-          <Input.Root>
-            <Input.Label>Horário</Input.Label>
-            <Input.Field name='value' />
-          </Input.Root>
+          <DatePicker.Root>
+            <DatePicker.Label>Data</DatePicker.Label>
+            <DatePicker.Field name='date' />
+          </DatePicker.Root>
+          <Select.Root>
+            <Select.Label>Horário</Select.Label>
+            <Select.Field name='time'>
+              <Select.Trigger>
+                <Timer className='h-5 fill-gray-300' />
+              </Select.Trigger>
+              <Select.Content>
+                <Select.Item
+                  value={JSON.stringify({ title: 123, value: 1234 })}
+                  className='p-1 outline-0 rounded bg-gray-400 hover:brightness-90 hover:cursor-pointer text-gray-25'
+                >
+                  <Select.ItemText>45 minutos</Select.ItemText>
+                  <Select.ItemIndicator>…</Select.ItemIndicator>
+                </Select.Item>
+              </Select.Content>
+            </Select.Field>
+          </Select.Root>
           <Select.Root>
             <Select.Label>Duração</Select.Label>
             <Select.Field name='duration'>
@@ -56,7 +73,7 @@ export function ScheduleFormTime() {
               <Select.Content>
                 <Select.Item
                   value={JSON.stringify({ title: 123, value: 1234 })}
-                  className='p-1 outline-0 rounded hover:bg-gray-600 hover:cursor-pointer text-gray-25'
+                  className='p-1 outline-0 rounded bg-gray-400 hover:brightness-90 hover:cursor-pointer text-gray-25'
                 >
                   <Select.ItemText>45 minutos</Select.ItemText>
                   <Select.ItemIndicator>…</Select.ItemIndicator>
@@ -65,9 +82,12 @@ export function ScheduleFormTime() {
             </Select.Field>
           </Select.Root>
         </div>
-        <div className='p-4'>
-          <Button className='w-full' type='submit'>
-            Avançar etapa
+        <div className='p-4 pb-18 flex flex-col flex-1 items-end'>
+          <Button className='mt-auto w-full' type='submit' outline>
+            Voltar etapa
+          </Button>
+          <Button className='mt-6 w-full' type='submit'>
+            Salvar agendamento
           </Button>
         </div>
       </form>
