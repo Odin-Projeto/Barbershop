@@ -135,7 +135,11 @@ export function Field({ name, ...props }: FieldProps) {
         placeholder='DD/MM/AAAA'
         className='text-sm bg-gray-500 rounded-xl text-gray-300 border border-gray-600 h-10 w-full p-4 disabled:opacity-80'
       />
-      <button onClick={toggleDialog} className='absolute right-0 mr-4 h-full'>
+      <button
+        type='button'
+        onClick={toggleDialog}
+        className='absolute right-0 mr-4 h-full'
+      >
         <Calendar className='h-5 fill-gray-300' />
       </button>
       <dialog
