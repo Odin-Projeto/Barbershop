@@ -9,15 +9,49 @@ import Timer from '../../assets/timer.svg?react';
 import { Button } from '../../components/button/button';
 import { Select } from '../../components/input/select-field';
 import { DatePicker } from '../../components/input/datepicker';
+import { useNavigate } from 'react-router-dom';
+import { useScheduleStore } from './store';
+import { parse } from 'date-fns';
 
 export function ScheduleFormTime() {
+  const navigate = useNavigate();
   const { step, handlePrevStep } = useScheduleFormContext();
   const timeSelectionForm = useForm();
   const { handleSubmit } = timeSelectionForm;
+  const setCurrentSchedule = useScheduleStore(
+    (state) => state.setCurrentSchedule
+  );
+  const currentSchedule = useScheduleStore((state) => state.currentSchedule);
+  const addSchedule = useScheduleStore((state) => state.addSchedule);
+  const schedules = useScheduleStore((state) => state.schedules);
+  console.log('currentSchedule', currentSchedule);
 
-  function handleSelectTime() {}
+  const times = ['08:00', '09:00', '10:00', '11:00'];
+  const durations = [
+    {
+      value: 60,
+      description: '60 minutos',
+    },
+  ];
+
+  function handleSelectTime(data) {
+    if (currentSchedule) {
+      setCurrentSchedule({
+        ...currentSchedule,
+        date: parse(data.date, 'dd/MM/yyyy', new Date()),
+        duration: data.duration,
+        time: data.time,
+      });
+      addSchedule();
+      navigate('/search-schedules');
+    }
+  }
 
   function handleReturnPreviousPage() {
+    return navigate('/home');
+  }
+
+  function handleReturnPreviousStep() {
     handlePrevStep();
   }
 
@@ -54,13 +88,16 @@ export function ScheduleFormTime() {
                 <Timer className='h-5 fill-gray-300' />
               </Select.Trigger>
               <Select.Content>
-                <Select.Item
-                  value={JSON.stringify({ title: 123, value: 1234 })}
-                  className='p-1 outline-0 rounded bg-gray-400 hover:brightness-90 hover:cursor-pointer text-gray-25'
-                >
-                  <Select.ItemText>45 minutos</Select.ItemText>
-                  <Select.ItemIndicator>…</Select.ItemIndicator>
-                </Select.Item>
+                {times.map((time, index) => (
+                  <Select.Item
+                    key={index}
+                    value={time}
+                    className='p-1 outline-0 rounded bg-gray-400 hover:brightness-90 hover:cursor-pointer text-gray-25'
+                  >
+                    <Select.ItemText>{time}</Select.ItemText>
+                    <Select.ItemIndicator>…</Select.ItemIndicator>
+                  </Select.Item>
+                ))}
               </Select.Content>
             </Select.Field>
           </Select.Root>
@@ -71,19 +108,27 @@ export function ScheduleFormTime() {
                 <ArrowDropDown className='h-5 fill-gray-300' />
               </Select.Trigger>
               <Select.Content>
-                <Select.Item
-                  value={JSON.stringify({ title: 123, value: 1234 })}
-                  className='p-1 outline-0 rounded bg-gray-400 hover:brightness-90 hover:cursor-pointer text-gray-25'
-                >
-                  <Select.ItemText>45 minutos</Select.ItemText>
-                  <Select.ItemIndicator>…</Select.ItemIndicator>
-                </Select.Item>
+                {durations.map((duration, index) => (
+                  <Select.Item
+                    key={index}
+                    value={duration.value.toString()}
+                    className='p-1 outline-0 rounded bg-gray-400 hover:brightness-90 hover:cursor-pointer text-gray-25'
+                  >
+                    <Select.ItemText>{duration.description}</Select.ItemText>
+                    <Select.ItemIndicator>…</Select.ItemIndicator>
+                  </Select.Item>
+                ))}
               </Select.Content>
             </Select.Field>
           </Select.Root>
         </div>
         <div className='p-4 pb-18 flex flex-col flex-1 items-end'>
-          <Button className='mt-auto w-full' type='submit' outline>
+          <Button
+            className='mt-auto w-full'
+            type='button'
+            outline
+            onClick={handleReturnPreviousStep}
+          >
             Voltar etapa
           </Button>
           <Button className='mt-6 w-full' type='submit'>

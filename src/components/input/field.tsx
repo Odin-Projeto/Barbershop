@@ -15,7 +15,7 @@ export function Field({
   ...props
 }: FieldProps) {
   const { register, setValue } = useFormContext();
-  const { ref, ...rest } = register('firstName');
+  const { ref, ...rest } = register(name);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const inputValue: string = useWatch({ name });
   const passwordClasses = props.type === 'password' ? 'pr-10' : '';
