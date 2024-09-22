@@ -12,37 +12,40 @@ import ArrowDropDown from './../../assets/arrow_drop_down.svg?react';
 import { useProfessionalStore, useServiceStore } from '../settings/store';
 import { useEffect } from 'react';
 import { useScheduleStore } from './store';
+import { z } from 'zod';
+import { normalizeCurrency } from '../../utils';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+const serviceFormSchema = z.object({
+  idService: z.string().min(1, 'Campo obrigatório'),
+  idProfessional: z.string().min(1, 'Campo obrigatório'),
+  commission: z.string(),
+  value: z.string(),
+});
+
+type ServiceFormData = z.infer<typeof serviceFormSchema>;
 
 export function ScheduleFormService() {
   const { step, handleNextStep } = useScheduleFormContext();
   const services = useServiceStore((state) => state.services);
   const professionals = useProfessionalStore((state) => state.professionals);
-  const currentSchedule = useScheduleStore((state) => state.currentSchedule);
   const setCurrentSchedule = useScheduleStore(
     (state) => state.setCurrentSchedule
   );
-  const serviceSelectionForm = useForm();
-  const { handleSubmit, watch, setValue } = serviceSelectionForm;
+  const serviceSelectionForm = useForm<ServiceFormData>({
+    resolver: zodResolver(serviceFormSchema),
+    defaultValues: {
+      idService: '',
+      idProfessional: '',
+    },
+  });
+  const { handleSubmit, watch, setValue, formState } = serviceSelectionForm;
   const navigate = useNavigate();
-  const selectedProfessionalId = watch('professional');
-  const selectedServiceId = watch('service');
-
-  const formatCurrency = (value?: string) => {
-    const cleanedValue = value?.replace(/\D/g, '');
-    const numberValue = Number(cleanedValue) / 100;
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(numberValue);
-  };
-
-  function handleSelectService(data) {
-    setCurrentSchedule({
-      idService: data.service,
-      idProfessional: data.professional,
-      commission: data.commission,
-      value: data.value,
-    });
+  const selectedProfessionalId = watch('idProfessional');
+  const selectedServiceId = watch('idService');
+  console.log(formState);
+  function handleSelectService(data: ServiceFormData) {
+    setCurrentSchedule({ ...data, confirmed: false });
     handleNextStep();
   }
 
@@ -85,7 +88,7 @@ export function ScheduleFormService() {
           </p>
           <Select.Root>
             <Select.Label>Serviço</Select.Label>
-            <Select.Field name='service'>
+            <Select.Field name='idService'>
               <Select.Trigger>
                 <ArrowDropDown className='h-5 fill-gray-300' />
               </Select.Trigger>
@@ -102,10 +105,11 @@ export function ScheduleFormService() {
                 ))}
               </Select.Content>
             </Select.Field>
+            <Select.ErrorMessage field='idService' />
           </Select.Root>
           <Select.Root>
             <Select.Label>Profissional</Select.Label>
-            <Select.Field name='professional'>
+            <Select.Field name='idProfessional'>
               <Select.Trigger>
                 <ArrowDropDown className='h-5 fill-gray-300' />
               </Select.Trigger>
@@ -122,14 +126,17 @@ export function ScheduleFormService() {
                 ))}
               </Select.Content>
             </Select.Field>
+            <Select.ErrorMessage field='idProfessional' />
           </Select.Root>
           <Input.Root>
             <Input.Label>Valor</Input.Label>
-            <Input.Field name='value' mask={formatCurrency} readOnly />
+            <Input.Field name='value' mask={normalizeCurrency} readOnly />
+            {/* <Select.ErrorMessage field='value' /> */}
           </Input.Root>
           <Input.Root>
             <Input.Label>Comissão profissional </Input.Label>
-            <Input.Field name='commission' mask={formatCurrency} readOnly />
+            <Input.Field name='commission' mask={normalizeCurrency} readOnly />
+            {/* <Select.ErrorMessage field='commission' /> */}
           </Input.Root>
         </div>
         <div className='p-4 pb-18 flex flex-1 items-end'>

@@ -9,6 +9,7 @@ type Schedule = {
   value: number;
   commission: number;
   duration: number;
+  confirmed: boolean;
 };
 
 type ScheduleState = {
@@ -16,6 +17,8 @@ type ScheduleState = {
   schedules: Schedule[];
   setCurrentSchedule: (data: Schedule) => void;
   addSchedule: () => void;
+  confirmSchedule: (id: string) => void;
+  uncheckSchedule: (id: string) => void;
   resetCurrentSchedule: () => void;
 };
 
@@ -34,6 +37,28 @@ export const useScheduleStore = create<ScheduleState>((set) => ({
         };
       }
       return { schedules: [...state.schedules] };
+    }),
+  confirmSchedule: (id: string) =>
+    set((state) => {
+      return {
+        schedules: state.schedules.map((schedule) => {
+          if (schedule.id === id) {
+            return { ...schedule, confirmed: true };
+          }
+          return schedule;
+        }),
+      };
+    }),
+  uncheckSchedule: (id: string) =>
+    set((state) => {
+      return {
+        schedules: state.schedules.map((schedule) => {
+          if (schedule.id === id) {
+            return { ...schedule, confirmed: false };
+          }
+          return schedule;
+        }),
+      };
     }),
   resetCurrentSchedule: () => set(() => ({ currentSchedule: undefined })),
 }));
