@@ -39,7 +39,7 @@ export function ConfirmSchedule() {
   }
   function handleUncheckSchedule() {
     uncheckSchedule(scheduleState.id ?? '');
-    handleCloseModal();
+    handleReturnPreviousPage();
   }
 
   if (!currentSchedule) return <></>;
@@ -155,11 +155,17 @@ export function ConfirmSchedule() {
         <Modal title='Confirmar agendamento?'>
           <div className='w-full'>
             <div>
-              <h6 className='text-center'>#adasdasd</h6>
+              <h6 className='text-center text-xl font-semibold text-gray-25'>
+                #{currentSchedule.id?.split('-')[0]}
+              </h6>
               <Button
                 variant={currentSchedule.confirmed ? 'danger' : 'success'}
                 className='mt-8 w-full'
-                onClick={handleConfirmSchedule}
+                onClick={
+                  currentSchedule.confirmed
+                    ? handleUncheckSchedule
+                    : handleConfirmSchedule
+                }
               >
                 {currentSchedule.confirmed ? 'Desmarcar' : 'Confirmar'}
               </Button>

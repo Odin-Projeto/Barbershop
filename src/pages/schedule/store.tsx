@@ -52,12 +52,7 @@ export const useScheduleStore = create<ScheduleState>((set) => ({
   uncheckSchedule: (id: string) =>
     set((state) => {
       return {
-        schedules: state.schedules.map((schedule) => {
-          if (schedule.id === id) {
-            return { ...schedule, confirmed: false };
-          }
-          return schedule;
-        }),
+        schedules: state.schedules.filter((schedule) => schedule.id !== id),
       };
     }),
   resetCurrentSchedule: () => set(() => ({ currentSchedule: undefined })),

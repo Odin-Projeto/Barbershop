@@ -39,13 +39,13 @@ export function Modal({ isOpen, onCloseModal, title, children }: ModalProps) {
       onRequestClose={onCloseModal}
     >
       <div>
-        <div>
+        <div className='flex flex-col'>
           <button
             type='button'
-            className='react-modal-close'
+            className='react-modal-close rounded-full bg-gray-600 p-2 ml-auto'
             onClick={onCloseModal}
           >
-            <CloseIcon fill='#52525b' />
+            <CloseIcon className='h-4 fill-gray-25' />
           </button>
           <h2 className='text-gray-25 text-center'>{title}</h2>
         </div>
