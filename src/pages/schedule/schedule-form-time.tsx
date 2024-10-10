@@ -12,19 +12,35 @@ import { DatePicker } from '../../components/input/datepicker';
 import { useNavigate } from 'react-router-dom';
 import { useScheduleStore } from './store';
 import { parse } from 'date-fns';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { v4 as uuid } from 'uuid';
+
+const serviceTimeFormSchema = z.object({
+  date: z.coerce.string().min(1, 'Campo obrigatório'),
+  duration: z.string().min(1, 'Campo obrigatório'),
+  time: z.coerce.string().min(1, 'Campo obrigatório'),
+});
+
+type ServiceTimeFormData = z.infer<typeof serviceTimeFormSchema>;
 
 export function ScheduleFormTime() {
   const navigate = useNavigate();
   const { step, handlePrevStep } = useScheduleFormContext();
-  const timeSelectionForm = useForm();
+  const timeSelectionForm = useForm<ServiceTimeFormData>({
+    resolver: zodResolver(serviceTimeFormSchema),
+    defaultValues: {
+      date: '',
+      time: '',
+      duration: '',
+    },
+  });
   const { handleSubmit } = timeSelectionForm;
   const setCurrentSchedule = useScheduleStore(
     (state) => state.setCurrentSchedule
   );
   const currentSchedule = useScheduleStore((state) => state.currentSchedule);
   const addSchedule = useScheduleStore((state) => state.addSchedule);
-  const schedules = useScheduleStore((state) => state.schedules);
-  console.log('currentSchedule', currentSchedule);
 
   const times = ['08:00', '09:00', '10:00', '11:00'];
   const durations = [
@@ -34,13 +50,14 @@ export function ScheduleFormTime() {
     },
   ];
 
-  function handleSelectTime(data) {
+  function handleSelectTime(data: ServiceTimeFormData) {
     if (currentSchedule) {
       setCurrentSchedule({
         ...currentSchedule,
         date: parse(data.date, 'dd/MM/yyyy', new Date()),
-        duration: data.duration,
+        duration: Number(data.duration),
         time: data.time,
+        id: uuid(),
       });
       addSchedule();
       navigate('/search-schedules');
@@ -80,6 +97,7 @@ export function ScheduleFormTime() {
           <DatePicker.Root>
             <DatePicker.Label>Data</DatePicker.Label>
             <DatePicker.Field name='date' />
+            <DatePicker.ErrorMessage field='date' />
           </DatePicker.Root>
           <Select.Root>
             <Select.Label>Horário</Select.Label>
@@ -100,6 +118,7 @@ export function ScheduleFormTime() {
                 ))}
               </Select.Content>
             </Select.Field>
+            <Select.ErrorMessage field='time' />
           </Select.Root>
           <Select.Root>
             <Select.Label>Duração</Select.Label>
@@ -120,6 +139,7 @@ export function ScheduleFormTime() {
                 ))}
               </Select.Content>
             </Select.Field>
+            <Select.ErrorMessage field='duration' />
           </Select.Root>
         </div>
         <div className='p-4 pb-18 flex flex-col flex-1 items-end'>
