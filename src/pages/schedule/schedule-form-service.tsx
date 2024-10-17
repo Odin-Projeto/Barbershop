@@ -8,7 +8,6 @@ import {
 import ArrowLeft from '../../assets/arrow_left.svg?react';
 import { useNavigate } from 'react-router-dom';
 import { Select } from '../../components/input/select-field';
-import ArrowDropDown from './../../assets/arrow_drop_down.svg?react';
 import { useProfessionalStore, useServiceStore } from '../settings/store';
 import { useEffect } from 'react';
 import { useScheduleStore } from './store';
@@ -29,21 +28,22 @@ export function ScheduleFormService() {
   const { step, handleNextStep } = useScheduleFormContext();
   const services = useServiceStore((state) => state.services);
   const professionals = useProfessionalStore((state) => state.professionals);
+  const currentSchedule = useScheduleStore((state) => state.currentSchedule);
   const setCurrentSchedule = useScheduleStore(
     (state) => state.setCurrentSchedule
   );
   const serviceSelectionForm = useForm<ServiceFormData>({
     resolver: zodResolver(serviceFormSchema),
     defaultValues: {
-      idService: '',
-      idProfessional: '',
+      idService: currentSchedule?.idService || '1',
+      idProfessional: currentSchedule?.idProfessional || '1 ',
     },
   });
   const { handleSubmit, watch, setValue, formState } = serviceSelectionForm;
   const navigate = useNavigate();
   const selectedProfessionalId = watch('idProfessional');
   const selectedServiceId = watch('idService');
-  console.log(formState);
+  console.log(professionals);
   function handleSelectService(data: ServiceFormData) {
     setCurrentSchedule({ ...data, confirmed: false });
     handleNextStep();
@@ -89,44 +89,26 @@ export function ScheduleFormService() {
           <Select.Root>
             <Select.Label>Serviço</Select.Label>
             <Select.Field name='idService'>
-              <Select.Trigger>
-                <ArrowDropDown className='h-5 fill-gray-300' />
-              </Select.Trigger>
-              <Select.Content>
-                {services.map((service, index) => (
-                  <Select.Item
-                    key={index}
-                    value={service.id || ''}
-                    className='p-1 outline-0 rounded bg-gray-400 hover:brightness-90 hover:cursor-pointer text-gray-25'
-                  >
-                    <Select.ItemText>{service.name}</Select.ItemText>
-                    <Select.ItemIndicator>…</Select.ItemIndicator>
-                  </Select.Item>
-                ))}
-              </Select.Content>
+              {services.map((service, index) => (
+                <Select.Option
+                  key={index}
+                  label={service.name}
+                  value={service?.id?.toString() || ''}
+                />
+              ))}
             </Select.Field>
-            <Select.ErrorMessage field='idService' />
           </Select.Root>
           <Select.Root>
             <Select.Label>Profissional</Select.Label>
             <Select.Field name='idProfessional'>
-              <Select.Trigger>
-                <ArrowDropDown className='h-5 fill-gray-300' />
-              </Select.Trigger>
-              <Select.Content>
-                {professionals.map((professional, index) => (
-                  <Select.Item
-                    key={index}
-                    value={professional.id || ''}
-                    className='p-1 outline-0 rounded bg-gray-400 hover:brightness-90 hover:cursor-pointer text-gray-25'
-                  >
-                    <Select.ItemText>{professional.name}</Select.ItemText>
-                    <Select.ItemIndicator>…</Select.ItemIndicator>
-                  </Select.Item>
-                ))}
-              </Select.Content>
+              {professionals.map((professional, index) => (
+                <Select.Option
+                  key={index}
+                  label={professional.name}
+                  value={professional?.id?.toString() || ''}
+                />
+              ))}
             </Select.Field>
-            <Select.ErrorMessage field='idProfessional' />
           </Select.Root>
           <Input.Root>
             <Input.Label>Valor</Input.Label>

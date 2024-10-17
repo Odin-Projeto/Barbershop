@@ -4,8 +4,8 @@ import {
   useScheduleFormContext,
 } from './hooks/useScheduleFormContext';
 import ArrowLeft from '../../assets/arrow_left.svg?react';
-import ArrowDropDown from '../../assets/arrow_drop_down.svg?react';
-import Timer from '../../assets/timer.svg?react';
+// import ArrowDropDown from '../../assets/arrow_drop_down.svg?react';
+// import Timer from '../../assets/timer.svg?react';
 import { Button } from '../../components/button/button';
 import { Select } from '../../components/input/select-field';
 import { DatePicker } from '../../components/input/datepicker';
@@ -100,46 +100,22 @@ export function ScheduleFormTime() {
             <DatePicker.ErrorMessage field='date' />
           </DatePicker.Root>
           <Select.Root>
-            <Select.Label>Horário</Select.Label>
             <Select.Field name='time'>
-              <Select.Trigger>
-                <Timer className='h-5 fill-gray-300' />
-              </Select.Trigger>
-              <Select.Content>
-                {times.map((time, index) => (
-                  <Select.Item
-                    key={index}
-                    value={time}
-                    className='p-1 outline-0 rounded bg-gray-400 hover:brightness-90 hover:cursor-pointer text-gray-25'
-                  >
-                    <Select.ItemText>{time}</Select.ItemText>
-                    <Select.ItemIndicator>…</Select.ItemIndicator>
-                  </Select.Item>
-                ))}
-              </Select.Content>
+              {times.map((time, index) => (
+                <Select.Option key={index} label={time} value={time} />
+              ))}
             </Select.Field>
-            <Select.ErrorMessage field='time' />
           </Select.Root>
           <Select.Root>
-            <Select.Label>Duração</Select.Label>
             <Select.Field name='duration'>
-              <Select.Trigger>
-                <ArrowDropDown className='h-5 fill-gray-300' />
-              </Select.Trigger>
-              <Select.Content>
-                {durations.map((duration, index) => (
-                  <Select.Item
-                    key={index}
-                    value={duration.value.toString()}
-                    className='p-1 outline-0 rounded bg-gray-400 hover:brightness-90 hover:cursor-pointer text-gray-25'
-                  >
-                    <Select.ItemText>{duration.description}</Select.ItemText>
-                    <Select.ItemIndicator>…</Select.ItemIndicator>
-                  </Select.Item>
-                ))}
-              </Select.Content>
+              {durations.map((duration, index) => (
+                <Select.Option
+                  key={index}
+                  label={duration.description}
+                  value={duration.value.toString()}
+                />
+              ))}
             </Select.Field>
-            <Select.ErrorMessage field='duration' />
           </Select.Root>
         </div>
         <div className='p-4 pb-18 flex flex-col flex-1 items-end'>
