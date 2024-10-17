@@ -1,5 +1,6 @@
 import { ErrorMessage } from './error-message';
 import { Field } from './field';
+import { Option } from './option';
 import { Label } from './label';
 import { Root } from './root';
 import { Item, ItemText, ItemIndicator } from '@radix-ui/react-select';
@@ -10,6 +11,7 @@ export const Select = {
   ErrorMessage,
   Label,
   Field,
+  Option,
   Root,
   Item,
   ItemText,
