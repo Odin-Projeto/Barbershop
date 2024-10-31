@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Profissional {
+  id          Int           @id @default(autoincrement())
+  nome        String?
+  email       String?
+  senha       String?
+  telefone    String?
+  admin       Boolean?
+  Agendamento Agendamento[]
+}
+
+model Servico {
+  id                   Int           @id @default(autoincrement())
+  nome                 String?
+  descricao            String?
+  duracao              Int?
+  valor                Float?
+  porcentagem_comissao Float?
+  Agendamento          Agendamento[]
+}
+
+model Agendamento {
+  id Int @id @default(autoincrement())
+
+  // Status
+  status String @default("MARCADO")
+
+  // Horário
+  dataHora DateTime?
+
+  // Valores
+  valor                 Float?
+  comissao_profissional Float?
+
+  // Relações
+  Profissional    Profissional @relation(fields: [profissional_id], references: [id])
+  profissional_id Int
+  Servico         Servico      @relation(fields: [servico_id], references: [id])
+  servico_id      Int
+}
