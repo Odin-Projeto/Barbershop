@@ -70,7 +70,7 @@ export function ScheduleFormTime() {
         profissional_id: Number(currentSchedule.idProfessional),
         servico_id: Number(currentSchedule.idService),
         status: 'MARCADO',
-        valor: formatCurrencyToNumber(currentSchedule.value),
+        valor: formatCurrencyToNumber(currentSchedule.value ?? 0),
       });
       navigate('/search-schedules');
     }

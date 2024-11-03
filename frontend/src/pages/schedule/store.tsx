@@ -4,12 +4,11 @@ type Schedule = {
   id?: string | null;
   idService: string;
   idProfessional: string;
-  date: Date;
-  time: string;
-  value: number;
+  date?: Date;
+  time?: string;
+  value?: number;
   commission: number;
-  duration: number;
-  confirmed: boolean;
+  duration?: number;
 };
 
 type ScheduleState = {

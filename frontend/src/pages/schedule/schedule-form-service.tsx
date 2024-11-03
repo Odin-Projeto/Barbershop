@@ -16,6 +16,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useQuery } from '@tanstack/react-query';
 import { getServices } from '../../services/requests/getServices';
 import { getProfessionals } from '../../services/requests/getProfessionals';
+import { formatCurrencyToNumber } from '../../utils/formatCurrencyToNumber';
 
 const serviceFormSchema = z.object({
   idService: z.string().min(1, 'Campo obrigatório'),
@@ -55,7 +56,11 @@ export function ScheduleFormService() {
   );
 
   function handleSelectService(data: ServiceFormData) {
-    setCurrentSchedule({ ...data });
+    setCurrentSchedule({
+      ...data,
+      commission: Number(data.commission),
+      value: formatCurrencyToNumber(data.value),
+    });
     handleNextStep();
   }
 
