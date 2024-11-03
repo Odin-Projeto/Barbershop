@@ -51,11 +51,11 @@ export function ScheduleFormService() {
     queryFn: getProfessionals,
   });
   const selectedService = services?.find(
-    (item) => item.id == selectedServiceId
+    (item) => item.id == Number(selectedServiceId)
   );
 
   function handleSelectService(data: ServiceFormData) {
-    setCurrentSchedule({ ...data, confirmed: false });
+    setCurrentSchedule({ ...data });
     handleNextStep();
   }
 
@@ -64,8 +64,11 @@ export function ScheduleFormService() {
   }
 
   useEffect(() => {
-    setValue('commission', selectedService?.porcentagem_comissao.toFixed(2));
-    setValue('value', selectedService?.valor.toFixed(2));
+    setValue(
+      'commission',
+      selectedService?.porcentagem_comissao.toString() || ''
+    );
+    setValue('value', (selectedService?.valor || 0).toFixed(2));
   }, [selectedServiceId]);
 
   if (step !== CurrentStep.ServiceSelection) return;

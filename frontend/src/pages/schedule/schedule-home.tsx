@@ -11,7 +11,6 @@ import { format, isEqual, startOfDay } from 'date-fns';
 import SearchIcon from '../../assets/search.svg?react';
 import { useNavigate } from 'react-router-dom';
 import ArrowRight from '../../assets/arrow_right.svg?react';
-import { useServiceStore } from '../settings/store';
 import { useCallback, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getSchedules } from '../../services/requests/getSchedules';
@@ -28,7 +27,6 @@ const formatMonthCaption = (date: Date, options?: FormatOptions) => {
 export function ScheduleHome() {
   const defaultClassNames = getDefaultClassNames();
   const navigate = useNavigate();
-  const services = useServiceStore((state) => state.services);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const { data } = useQuery({
     queryKey: ['schedules'],
@@ -66,7 +64,7 @@ export function ScheduleHome() {
     chevron: `${defaultClassNames.chevron} fill-amber-500`,
   };
 
-  function handleShowSchedule(id?: string | null) {
+  function handleShowSchedule(id?: number | null) {
     navigate('/confirm-schedule', { state: { id } });
   }
 
@@ -120,7 +118,7 @@ export function ScheduleHome() {
                           key={index}
                           className={[
                             'h-[3px] rounded-lg w-full',
-                            schedule.confirmed
+                            schedule.status === 'CONFIRMADO'
                               ? 'bg-green-500'
                               : 'bg-yellow-400',
                           ].join(' ')}
@@ -158,7 +156,9 @@ export function ScheduleHome() {
                     <div
                       className={[
                         'w-[3px] h-4 rounded',
-                        schedule.confirmed ? 'bg-green-400' : 'bg-yellow-400',
+                        schedule.status === 'CONFIRMADO'
+                          ? 'bg-green-400'
+                          : 'bg-yellow-400',
                       ].join(' ')}
                     ></div>
                     <span>{schedule.Profissional.nome}</span>
@@ -167,11 +167,6 @@ export function ScheduleHome() {
                 </div>
                 <div className='pl-16  text-sm text-[#99a3b3] text-left'>
                   {schedule.Servico.nome}
-                  {
-                    services.find(
-                      (service) => service.id === schedule.idService
-                    )?.name
-                  }
                 </div>
               </button>
             </li>

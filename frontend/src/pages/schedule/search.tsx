@@ -3,11 +3,9 @@ import ArrowLeft from '../../assets/arrow_left.svg?react';
 import ArrowRight from '../../assets/arrow_right.svg?react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useMemo, useRef } from 'react';
-import { useScheduleStore } from './store';
-import { useProfessionalStore, useServiceStore } from '../settings/store';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { getSchedules } from '../../services/requests/getSchedules';
 import { getServices } from '../../services/requests/getServices';
 
@@ -53,7 +51,7 @@ export function Search() {
     return navigate('/home');
   }
 
-  function handleShowSchedule(id?: string | null) {
+  function handleShowSchedule(id?: number | null) {
     navigate(`/confirm-schedule?id=${id}`, { state: { id } });
   }
 
@@ -109,7 +107,9 @@ export function Search() {
                       <div
                         className={[
                           'w-[3px] h-4 rounded',
-                          schedule.confirmed ? 'bg-green-400' : 'bg-yellow-400',
+                          schedule.status === 'CONFIRMADO'
+                            ? 'bg-green-400'
+                            : 'bg-yellow-400',
                         ].join(' ')}
                       ></div>
                       <span>Guilherme da Silva</span>
@@ -118,11 +118,6 @@ export function Search() {
                   </div>
                   <div className='pl-18 text-sm text-gray-25 text-left'>
                     {schedule.Servico.nome}
-                    {/* {
-                      services.find(
-                        (service) => service.id === schedule.idService
-                      )?.name
-                    } */}
                   </div>
                 </button>
               </li>

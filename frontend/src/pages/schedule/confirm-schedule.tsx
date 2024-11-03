@@ -5,11 +5,10 @@ import { Badge } from '../../components/badge/badge';
 import { Button } from '../../components/button/button';
 import { useScheduleStore } from './store';
 import { format } from 'date-fns';
-import { useProfessionalStore, useServiceStore } from '../settings/store';
 import { useModal } from '../../hooks/useModal';
 import { useQuery } from '@tanstack/react-query';
 import { getScheduleById } from '../../services/requests/getScheduleById';
-import { normalizeCurrency } from '../../utils';
+import { formatTime, normalizeCurrency } from '../../utils';
 
 type ScheduleState = {
   id?: string;
@@ -22,19 +21,8 @@ export function ConfirmSchedule() {
   const id = searchParams.get('id');
   const { Modal, handleOpenModal, handleCloseModal } = useModal();
   const scheduleState = location.state as ScheduleState;
-  const currentSchedule = useScheduleStore((state) =>
-    state.schedules.find((schedule) => schedule.id === scheduleState?.id)
-  );
-  const currentService = useServiceStore((state) =>
-    state.services.find((service) => service.id === currentSchedule?.idService)
-  );
   const confirmSchedule = useScheduleStore((state) => state.confirmSchedule);
   const uncheckSchedule = useScheduleStore((state) => state.uncheckSchedule);
-  const professional = useProfessionalStore((state) =>
-    state.professionals.find(
-      (item) => item.id === currentSchedule?.idProfessional
-    )
-  );
   const { data: schedule } = useQuery({
     queryKey: ['schedule'],
     queryFn: () => getScheduleById(Number(id || 0)),
@@ -109,7 +97,7 @@ export function ConfirmSchedule() {
             <li className='flex grid grid-cols-[160px_auto]'>
               <small className='text-sm text-gray-300'>Horário</small>
               <strong className='text-sm font-medium'>
-                {schedule.dataHora}
+                {formatTime(schedule.dataHora)}
               </strong>
             </li>
             <li className='flex grid grid-cols-[160px_auto]'>
