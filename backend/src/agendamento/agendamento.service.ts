@@ -71,6 +71,7 @@ export class AgendamentoService {
         ...(servico_id && { servico_id: Number(servico_id) }),
         ...(status && { status: { contains: status } }),
         ...(valor && { valor: Number(valor) }),
+        status: { not: 'CANCELADO' },
       },
       include: { Profissional: true, Servico: true },
     });
