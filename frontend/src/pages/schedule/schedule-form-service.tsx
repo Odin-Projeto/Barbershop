@@ -8,12 +8,14 @@ import {
 import ArrowLeft from '../../assets/arrow_left.svg?react';
 import { useNavigate } from 'react-router-dom';
 import { Select } from '../../components/input/select-field';
-import { useProfessionalStore, useServiceStore } from '../settings/store';
 import { useEffect } from 'react';
 import { useScheduleStore } from './store';
 import { z } from 'zod';
 import { normalizeCurrency } from '../../utils';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQuery } from '@tanstack/react-query';
+import { getServices } from '../../services/requests/getServices';
+import { getProfessionals } from '../../services/requests/getProfessionals';
 
 const serviceFormSchema = z.object({
   idService: z.string().min(1, 'Campo obrigatório'),
@@ -26,8 +28,6 @@ type ServiceFormData = z.infer<typeof serviceFormSchema>;
 
 export function ScheduleFormService() {
   const { step, handleNextStep } = useScheduleFormContext();
-  const services = useServiceStore((state) => state.services);
-  const professionals = useProfessionalStore((state) => state.professionals);
   const currentSchedule = useScheduleStore((state) => state.currentSchedule);
   const setCurrentSchedule = useScheduleStore(
     (state) => state.setCurrentSchedule
@@ -35,15 +35,25 @@ export function ScheduleFormService() {
   const serviceSelectionForm = useForm<ServiceFormData>({
     resolver: zodResolver(serviceFormSchema),
     defaultValues: {
-      idService: currentSchedule?.idService || '1',
+      idService: currentSchedule?.idService || '',
       idProfessional: currentSchedule?.idProfessional || '1 ',
     },
   });
-  const { handleSubmit, watch, setValue, formState } = serviceSelectionForm;
+  const { handleSubmit, watch, setValue } = serviceSelectionForm;
   const navigate = useNavigate();
-  const selectedProfessionalId = watch('idProfessional');
   const selectedServiceId = watch('idService');
-  console.log(professionals);
+  const { data: services } = useQuery({
+    queryKey: ['services'],
+    queryFn: getServices,
+  });
+  const { data: professionals } = useQuery({
+    queryKey: ['professionals'],
+    queryFn: getProfessionals,
+  });
+  const selectedService = services?.find(
+    (item) => item.id == selectedServiceId
+  );
+
   function handleSelectService(data: ServiceFormData) {
     setCurrentSchedule({ ...data, confirmed: false });
     handleNextStep();
@@ -54,15 +64,9 @@ export function ScheduleFormService() {
   }
 
   useEffect(() => {
-    const selectedProfessional = professionals.find(
-      (item) => item.id === selectedProfessionalId
-    );
-    const selectedService = selectedProfessional?.services.find(
-      (item) => item.serviceId === selectedServiceId
-    );
-    setValue('commission', selectedService?.commission.toFixed(2));
-    setValue('value', selectedService?.value.toFixed(2));
-  }, [selectedProfessionalId, selectedServiceId]);
+    setValue('commission', selectedService?.porcentagem_comissao.toFixed(2));
+    setValue('value', selectedService?.valor.toFixed(2));
+  }, [selectedServiceId]);
 
   if (step !== CurrentStep.ServiceSelection) return;
 
@@ -89,10 +93,10 @@ export function ScheduleFormService() {
           <Select.Root>
             <Select.Label>Serviço</Select.Label>
             <Select.Field name='idService'>
-              {services.map((service, index) => (
+              {services?.map((service, index) => (
                 <Select.Option
                   key={index}
-                  label={service.name}
+                  label={service.nome}
                   value={service?.id?.toString() || ''}
                 />
               ))}
@@ -101,10 +105,10 @@ export function ScheduleFormService() {
           <Select.Root>
             <Select.Label>Profissional</Select.Label>
             <Select.Field name='idProfessional'>
-              {professionals.map((professional, index) => (
+              {professionals?.map((professional, index) => (
                 <Select.Option
                   key={index}
-                  label={professional.name}
+                  label={professional.nome}
                   value={professional?.id?.toString() || ''}
                 />
               ))}

@@ -7,6 +7,9 @@ import { useScheduleStore } from './store';
 import { useProfessionalStore, useServiceStore } from '../settings/store';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { getSchedules } from '../../services/requests/getSchedules';
+import { getServices } from '../../services/requests/getServices';
 
 type SearchForm = {
   search: string;
@@ -14,36 +17,44 @@ type SearchForm = {
 
 export function Search() {
   const searchForm = useForm<SearchForm>({ defaultValues: { search: '' } });
-  const schedules = useScheduleStore((state) => state.schedules);
-  const professionals = useProfessionalStore((state) => state.professionals);
-  const services = useServiceStore((state) => state.services);
+  // const schedules = useScheduleStore((state) => state.schedules);
+  // const professionals = useProfessionalStore((state) => state.professionals);
+  // const services = useServiceStore((state) => state.services);
   const navigate = useNavigate();
   const { handleSubmit, register, control } = searchForm;
   const { ref, ...rest } = register('search');
   const inputRef = useRef<HTMLInputElement | null>(null);
   const searchValue = useWatch({ control, name: 'search' });
-
+  const { data: services } = useQuery({
+    queryKey: ['services'],
+    queryFn: getServices,
+  });
+  const { data: schedules } = useQuery({
+    queryKey: ['schedules'],
+    queryFn: getSchedules,
+  });
   const filteredSchedules = useMemo(() => {
     if (!searchValue) return schedules;
-    const serviceFound = services.find(
+    console.log(schedules);
+    const serviceFound = services?.find(
       (service) =>
-        service.name.toUpperCase().indexOf(searchValue.toUpperCase()) !== -1
+        service.nome.toUpperCase().indexOf(searchValue.toUpperCase()) !== -1
     );
-
+    console.log('serviceFound', serviceFound);
     if (serviceFound) {
-      return schedules.filter(
-        (schedule) => schedule.idService === serviceFound.id
+      return schedules?.filter(
+        (schedule) => schedule.Servico.id === serviceFound.id
       );
     }
     return [];
-  }, [searchValue]);
+  }, [searchValue, services, schedules]);
 
   function handleReturnPreviousPage() {
     return navigate('/home');
   }
 
   function handleShowSchedule(id?: string | null) {
-    navigate('/confirm-schedule', { state: { id } });
+    navigate(`/confirm-schedule?id=${id}`, { state: { id } });
   }
 
   useEffect(() => {
@@ -78,10 +89,10 @@ export function Search() {
         </div>
         <section className='flex p-4 mt-16'>
           <ul className='flex-1'>
-            {filteredSchedules.map((schedule, index) => (
+            {filteredSchedules?.map((schedule, index) => (
               <li key={index} className=''>
                 <span className='text-gray-100 text-sm'>
-                  {format(schedule.date, "eee, dd 'de' MMM 'de' yyyy", {
+                  {format(schedule.dataHora, "eee, dd 'de' MMM 'de' yyyy", {
                     locale: ptBR,
                   })}
                 </span>
@@ -92,7 +103,9 @@ export function Search() {
                 >
                   <div className='flex flex-col text-gray-25'>
                     <div className='flex gap-4 items-center'>
-                      <span className=''>{schedule.time}</span>
+                      <span className=''>
+                        {format(schedule.dataHora, 'HH:mm')}
+                      </span>
                       <div
                         className={[
                           'w-[3px] h-4 rounded',
@@ -104,11 +117,12 @@ export function Search() {
                     </div>
                   </div>
                   <div className='pl-18 text-sm text-gray-25 text-left'>
-                    {
+                    {schedule.Servico.nome}
+                    {/* {
                       services.find(
                         (service) => service.id === schedule.idService
                       )?.name
-                    }
+                    } */}
                   </div>
                 </button>
               </li>

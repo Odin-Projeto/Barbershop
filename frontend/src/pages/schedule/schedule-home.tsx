@@ -7,13 +7,15 @@ import {
   getDefaultClassNames,
 } from 'react-day-picker';
 import { ptBR } from 'date-fns/locale';
-import { format, getDate } from 'date-fns';
+import { format, isEqual, startOfDay } from 'date-fns';
 import SearchIcon from '../../assets/search.svg?react';
 import { useNavigate } from 'react-router-dom';
 import ArrowRight from '../../assets/arrow_right.svg?react';
-import { useScheduleStore } from './store';
-import { useProfessionalStore, useServiceStore } from '../settings/store';
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { useServiceStore } from '../settings/store';
+import { useCallback, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { getSchedules } from '../../services/requests/getSchedules';
+import { formatTime } from '../../utils';
 
 const formatWeekdayName = (date: Date) => {
   return format(date, 'EEEEE', { locale: ptBR });
@@ -26,18 +28,26 @@ const formatMonthCaption = (date: Date, options?: FormatOptions) => {
 export function ScheduleHome() {
   const defaultClassNames = getDefaultClassNames();
   const navigate = useNavigate();
-  const professionals = useProfessionalStore((state) => state.professionals);
   const services = useServiceStore((state) => state.services);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const schedules = useScheduleStore((state) => state.schedules);
-  const filteredSchedules = schedules.filter(
-    (schedule) => getDate(schedule.date) === getDate(selectedDate)
+  const { data } = useQuery({
+    queryKey: ['schedules'],
+    queryFn: getSchedules,
+  });
+  const filteredSchedules =
+    data?.filter((schedule) =>
+      isEqual(startOfDay(schedule.dataHora), startOfDay(selectedDate))
+    ) || [];
+  const schedulesByDate = useCallback(
+    (date: Date) => {
+      return (
+        data?.filter((schedule) =>
+          isEqual(startOfDay(schedule.dataHora), startOfDay(date))
+        ) || []
+      );
+    },
+    [data]
   );
-  const schedulesByDate = useCallback((date: Date) => {
-    return schedules.filter(
-      (schedule) => getDate(schedule.date) === getDate(date)
-    );
-  }, []);
 
   const classNames: Partial<ClassNames> = {
     today: `group text-orange-400`,
@@ -99,12 +109,11 @@ export function ScheduleHome() {
         components={{
           Day: (e) => <Day {...e}></Day>,
           DayButton: (e) => {
-            console.log('sdfsdf', e.children);
             return (
               <DayButton {...e}>
                 {e.children}
                 <div className='absolute flex flex-col w-full gap-[2px] left-0 p-1'>
-                  {schedulesByDate(e.day.date).map((schedule, index) => {
+                  {schedulesByDate(e.day.date)?.map((schedule, index) => {
                     if (index < 4) {
                       return (
                         <span
@@ -137,7 +146,7 @@ export function ScheduleHome() {
           {filteredSchedules.map((schedule, index) => (
             <li
               key={index}
-              className='last:border-none border-b mx-4 border-b-gray-200'
+              className='last:border-none border-b mx-4 border-b-[#99a3b3]'
             >
               <button
                 className='rounded-xl w-full py-4 hover:pr-5 ease-in duration-300'
@@ -145,18 +154,19 @@ export function ScheduleHome() {
               >
                 <div className='flex flex-col text-gray-25'>
                   <div className='flex gap-4 items-center'>
-                    <span className=''>{schedule.time}</span>
+                    <span className=''>{formatTime(schedule.dataHora)}</span>
                     <div
                       className={[
                         'w-[3px] h-4 rounded',
                         schedule.confirmed ? 'bg-green-400' : 'bg-yellow-400',
                       ].join(' ')}
                     ></div>
-                    <span>Guilherme da Silva</span>
+                    <span>{schedule.Profissional.nome}</span>
                     <ArrowRight className='h-3 ml-auto fill-orange-400' />
                   </div>
                 </div>
-                <div className='pl-18 text-sm text-gray-25 text-left'>
+                <div className='pl-16  text-sm text-[#99a3b3] text-left'>
+                  {schedule.Servico.nome}
                   {
                     services.find(
                       (service) => service.id === schedule.idService

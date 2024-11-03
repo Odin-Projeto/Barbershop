@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import ArrowLeft from '../../assets/arrow_left.svg?react';
 import PencilIcon from '../../assets/pencil.svg?react';
 import { Badge } from '../../components/badge/badge';
@@ -7,6 +7,9 @@ import { useScheduleStore } from './store';
 import { format } from 'date-fns';
 import { useProfessionalStore, useServiceStore } from '../settings/store';
 import { useModal } from '../../hooks/useModal';
+import { useQuery } from '@tanstack/react-query';
+import { getScheduleById } from '../../services/requests/getScheduleById';
+import { normalizeCurrency } from '../../utils';
 
 type ScheduleState = {
   id?: string;
@@ -15,6 +18,8 @@ type ScheduleState = {
 export function ConfirmSchedule() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get('id');
   const { Modal, handleOpenModal, handleCloseModal } = useModal();
   const scheduleState = location.state as ScheduleState;
   const currentSchedule = useScheduleStore((state) =>
@@ -30,6 +35,11 @@ export function ConfirmSchedule() {
       (item) => item.id === currentSchedule?.idProfessional
     )
   );
+  const { data: schedule } = useQuery({
+    queryKey: ['schedule'],
+    queryFn: () => getScheduleById(Number(id || 0)),
+  });
+
   function handleReturnPreviousPage() {
     navigate('/home');
   }
@@ -42,7 +52,7 @@ export function ConfirmSchedule() {
     handleReturnPreviousPage();
   }
 
-  if (!currentSchedule) return <></>;
+  if (!schedule) return <></>;
 
   return (
     <div className='flex flex-col h-full'>
@@ -55,7 +65,7 @@ export function ConfirmSchedule() {
           <ArrowLeft height={24} width={24} className='fill-gray-25' />
         </button>
         <h1 className='text-gray-25 text-xl font-semibold'>
-          Agendamento #{currentSchedule.id?.split('-')[0]}
+          Agendamento #{schedule.id}
         </h1>
         <button
           className='bg-gray-600 rounded-full p-1 ml-auto'
@@ -68,9 +78,9 @@ export function ConfirmSchedule() {
       <div className='p-4 pt-18 relative'>
         <Badge
           size='medium'
-          variant={currentSchedule.confirmed ? 'success' : 'warning'}
+          variant={schedule.status === 'CONFIRMADO' ? 'success' : 'warning'}
         >
-          {currentSchedule.confirmed ? 'Confirmado' : 'Marcado'}
+          {schedule.status === 'CONFIRMADO' ? 'Confirmado' : 'Marcado'}
         </Badge>
         <section className='text-gray-25 mt-6'>
           <h6 className='text-base font-medium'>Cliente</h6>
@@ -93,19 +103,19 @@ export function ConfirmSchedule() {
             <li className='flex grid grid-cols-[160px_auto]'>
               <small className='text-sm text-gray-300'>Data</small>
               <strong className='text-sm font-medium'>
-                {format(currentSchedule.date, 'dd/MM/yyyy')}
+                {format(schedule.dataHora, 'dd/MM/yyyy')}
               </strong>
             </li>
             <li className='flex grid grid-cols-[160px_auto]'>
               <small className='text-sm text-gray-300'>Horário</small>
               <strong className='text-sm font-medium'>
-                {currentSchedule.time}
+                {schedule.dataHora}
               </strong>
             </li>
             <li className='flex grid grid-cols-[160px_auto]'>
               <small className='text-sm text-gray-300'>Duração</small>
               <strong className='text-sm font-medium'>
-                {currentSchedule.duration} minutos
+                {schedule.Servico.duracao} minutos
               </strong>
             </li>
           </ul>
@@ -117,32 +127,30 @@ export function ConfirmSchedule() {
             <li className='grid grid-cols-[160px_auto]'>
               <small className='text-sm text-gray-300'>Serviço</small>
               <strong className='text-sm font-medium'>
-                {currentService?.name}
+                {schedule?.Servico.nome}
               </strong>
             </li>
             <li className='grid grid-cols-[160px_auto]'>
               <small className='text-sm text-gray-300'>Profissional</small>
               <strong className='text-sm font-medium'>
-                {professional?.name}
+                {schedule?.Profissional.nome}
               </strong>
             </li>
             <li className=' grid grid-cols-[160px_auto]'>
               <small className='text-sm text-gray-300'>Valor</small>
               <strong className='text-sm font-medium'>
-                {currentSchedule.value}
+                {normalizeCurrency(`${schedule.valor.toFixed(2)}`)}
               </strong>
             </li>
             <li className='grid grid-cols-[160px_auto]'>
               <small className='text-sm text-gray-300'>Comissão</small>
-              <strong className='text-sm font-medium'>
-                {currentSchedule.commission}
-              </strong>
+              <strong className='text-sm font-medium'>{schedule.id}%</strong>
             </li>
           </ul>
         </section>
       </div>
       <div className='p-4 pb-18 flex flex-1 items-end gap-3'>
-        {currentSchedule.confirmed && (
+        {schedule.status === 'CONFIRMADO' && (
           <Button
             className='w-full'
             variant='danger'
@@ -156,23 +164,25 @@ export function ConfirmSchedule() {
           <div className='w-full'>
             <div>
               <h6 className='text-center text-xl font-semibold text-gray-25'>
-                #{currentSchedule.id?.split('-')[0]}
+                #{schedule.id}
               </h6>
               <Button
-                variant={currentSchedule.confirmed ? 'danger' : 'success'}
+                variant={
+                  schedule.status === 'CONFIRMADO' ? 'danger' : 'success'
+                }
                 className='mt-8 w-full'
                 onClick={
-                  currentSchedule.confirmed
+                  schedule.status === 'CONFIRMADO'
                     ? handleUncheckSchedule
                     : handleConfirmSchedule
                 }
               >
-                {currentSchedule.confirmed ? 'Desmarcar' : 'Confirmar'}
+                {schedule.status === 'CONFIRMADO' ? 'Desmarcar' : 'Confirmar'}
               </Button>
             </div>
           </div>
         </Modal>
-        {!currentSchedule.confirmed && (
+        {schedule.status === 'MARCADO' && (
           <>
             <Button
               className='w-full'
