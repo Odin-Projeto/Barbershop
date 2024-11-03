@@ -11,6 +11,7 @@ export enum AgendamentoStatus {
   MARCADO = 'MARCADO',
   CONFIRMADO = 'CONFIRMADO',
   REALIZADO = 'REALIZADO',
+  CANCELADO = 'CANCELADO',
 }
 
 export class AgendamentoDto {
