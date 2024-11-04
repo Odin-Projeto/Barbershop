@@ -13,7 +13,7 @@ import { parse } from 'date-fns';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { v4 as uuid } from 'uuid';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createSchdule } from '../../services/requests/creteSchedule';
 import { formatCurrencyToNumber } from '../../utils/formatCurrencyToNumber';
 
@@ -42,8 +42,16 @@ export function ScheduleFormTime() {
   );
   const currentSchedule = useScheduleStore((state) => state.currentSchedule);
   const addSchedule = useScheduleStore((state) => state.addSchedule);
-  const creteSchedule = useMutation({ mutationFn: createSchdule });
-
+  const queryClient = useQueryClient();
+  const creteSchedule = useMutation({
+    mutationFn: createSchdule,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['schedules'],
+        exact: true,
+      });
+    },
+  });
   const times = ['08:00', '09:00', '10:00', '11:00'];
   const durations = [
     {
@@ -62,9 +70,11 @@ export function ScheduleFormTime() {
         id: uuid(),
       });
       addSchedule();
+      const dateTimeString = `${data.date} ${data.time}`;
+      const parsedDate = parse(dateTimeString, 'dd/MM/yyyy HH:mm', new Date());
       creteSchedule.mutate({
         comissao_profissional: Number(currentSchedule.commission),
-        dataHora: new Date(),
+        dataHora: parsedDate,
         profissional_id: Number(currentSchedule.idProfessional),
         servico_id: Number(currentSchedule.idService),
         status: 'MARCADO',

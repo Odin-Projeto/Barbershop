@@ -1,48 +1,51 @@
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import ArrowLeft from '../../assets/arrow_left.svg?react';
 import PencilIcon from '../../assets/pencil.svg?react';
 import { Badge } from '../../components/badge/badge';
 import { Button } from '../../components/button/button';
-import { useScheduleStore } from './store';
 import { format } from 'date-fns';
 import { useModal } from '../../hooks/useModal';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getScheduleById } from '../../services/requests/getScheduleById';
 import { formatTime, normalizeCurrency } from '../../utils';
 import { confirmSchedule } from '../../services/requests/confirmSchedule';
 import { cancelSchedule } from '../../services/requests/cancelSchedule';
 
-type ScheduleState = {
-  id?: string;
-};
-
 export function ConfirmSchedule() {
   const navigate = useNavigate();
-  const location = useLocation();
   const [searchParams] = useSearchParams();
   const id = searchParams.get('id');
   const { Modal, handleOpenModal, handleCloseModal } = useModal();
-  const scheduleState = location.state as ScheduleState;
-  // const confirmSchedule = useScheduleStore((state) => state.confirmSchedule);
-  const uncheckSchedule = useScheduleStore((state) => state.uncheckSchedule);
   const { data: schedule } = useQuery({
     queryKey: ['schedule'],
     queryFn: () => getScheduleById(Number(id || 0)),
     refetchOnMount: true,
     refetchOnWindowFocus: true,
   });
+  const queryClient = useQueryClient();
   const confirmScheduleMutation = useMutation({
     mutationFn: confirmSchedule,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['schedules'],
+        exact: true,
+      });
+    },
   });
   const cancelScheduleMutation = useMutation({
     mutationFn: cancelSchedule,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['schedules'],
+        exact: true,
+      });
+    },
   });
 
   function handleReturnPreviousPage() {
     navigate('/home');
   }
   function handleConfirmSchedule() {
-    // confirmSchedule(scheduleState.id ?? '');
     confirmScheduleMutation.mutate(Number(id ?? 0));
     handleReturnPreviousPage();
     handleCloseModal();
