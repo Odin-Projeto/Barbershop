@@ -4,8 +4,6 @@ import {
   useScheduleFormContext,
 } from './hooks/useScheduleFormContext';
 import ArrowLeft from '../../assets/arrow_left.svg?react';
-// import ArrowDropDown from '../../assets/arrow_drop_down.svg?react';
-// import Timer from '../../assets/timer.svg?react';
 import { Button } from '../../components/button/button';
 import { Select } from '../../components/input/select-field';
 import { DatePicker } from '../../components/input/datepicker';

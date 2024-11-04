@@ -31,6 +31,8 @@ export function ScheduleHome() {
   const { data } = useQuery({
     queryKey: ['schedules'],
     queryFn: getSchedules,
+    refetchOnMount: 'always',
+    refetchOnWindowFocus: 'always',
   });
   const filteredSchedules =
     data?.filter((schedule) =>
@@ -65,7 +67,7 @@ export function ScheduleHome() {
   };
 
   function handleShowSchedule(id?: number | null) {
-    navigate('/confirm-schedule', { state: { id } });
+    navigate(`/confirm-schedule?id=${id}`, { state: { id } });
   }
 
   function handleSelectDate(date?: Date) {

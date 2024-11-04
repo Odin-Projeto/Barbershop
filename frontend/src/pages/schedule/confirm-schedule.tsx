@@ -6,9 +6,11 @@ import { Button } from '../../components/button/button';
 import { useScheduleStore } from './store';
 import { format } from 'date-fns';
 import { useModal } from '../../hooks/useModal';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { getScheduleById } from '../../services/requests/getScheduleById';
 import { formatTime, normalizeCurrency } from '../../utils';
+import { confirmSchedule } from '../../services/requests/confirmSchedule';
+import { cancelSchedule } from '../../services/requests/cancelSchedule';
 
 type ScheduleState = {
   id?: string;
@@ -21,23 +23,34 @@ export function ConfirmSchedule() {
   const id = searchParams.get('id');
   const { Modal, handleOpenModal, handleCloseModal } = useModal();
   const scheduleState = location.state as ScheduleState;
-  const confirmSchedule = useScheduleStore((state) => state.confirmSchedule);
+  // const confirmSchedule = useScheduleStore((state) => state.confirmSchedule);
   const uncheckSchedule = useScheduleStore((state) => state.uncheckSchedule);
   const { data: schedule } = useQuery({
     queryKey: ['schedule'],
     queryFn: () => getScheduleById(Number(id || 0)),
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+  });
+  const confirmScheduleMutation = useMutation({
+    mutationFn: confirmSchedule,
+  });
+  const cancelScheduleMutation = useMutation({
+    mutationFn: cancelSchedule,
   });
 
   function handleReturnPreviousPage() {
     navigate('/home');
   }
   function handleConfirmSchedule() {
-    confirmSchedule(scheduleState.id ?? '');
+    // confirmSchedule(scheduleState.id ?? '');
+    confirmScheduleMutation.mutate(Number(id ?? 0));
+    handleReturnPreviousPage();
     handleCloseModal();
   }
   function handleUncheckSchedule() {
-    uncheckSchedule(scheduleState.id ?? '');
+    cancelScheduleMutation.mutate(Number(id ?? 0));
     handleReturnPreviousPage();
+    handleCloseModal();
   }
 
   if (!schedule) return <></>;

@@ -30,6 +30,8 @@ export function Search() {
   const { data: schedules } = useQuery({
     queryKey: ['schedules'],
     queryFn: getSchedules,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
   const filteredSchedules = useMemo(() => {
     if (!searchValue) return schedules;
