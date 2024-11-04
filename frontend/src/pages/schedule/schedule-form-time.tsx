@@ -23,6 +23,30 @@ const serviceTimeFormSchema = z.object({
   time: z.coerce.string().min(1, 'Campo obrigatório'),
 });
 
+const times = [
+  '08:00',
+  '08:30',
+  '09:00',
+  '09:30',
+  '10:00',
+  '10:30',
+  '11:00',
+  '11:30',
+  '12:00',
+  '12:30',
+  '13:00',
+  '13:30',
+  '14:00',
+  '14:30',
+  '15:00',
+  '15:30',
+  '16:00',
+  '16:30',
+  '17:00',
+  '17:30',
+  '18:00',
+];
+
 type ServiceTimeFormData = z.infer<typeof serviceTimeFormSchema>;
 
 export function ScheduleFormTime() {
@@ -52,7 +76,7 @@ export function ScheduleFormTime() {
       });
     },
   });
-  const times = ['08:00', '09:00', '10:00', '11:00'];
+
   const durations = [
     {
       value: 60,
@@ -120,6 +144,7 @@ export function ScheduleFormTime() {
             <DatePicker.ErrorMessage field='date' />
           </DatePicker.Root>
           <Select.Root>
+            <Select.Label>Horário</Select.Label>
             <Select.Field name='time'>
               {times.map((time, index) => (
                 <Select.Option key={index} label={time} value={time} />
@@ -127,6 +152,7 @@ export function ScheduleFormTime() {
             </Select.Field>
           </Select.Root>
           <Select.Root>
+            <Select.Label>Duração</Select.Label>
             <Select.Field name='duration'>
               {durations.map((duration, index) => (
                 <Select.Option
