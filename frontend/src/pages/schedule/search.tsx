@@ -114,7 +114,7 @@ export function Search() {
                             : 'bg-yellow-400',
                         ].join(' ')}
                       ></div>
-                      <span>Guilherme da Silva</span>
+                      <span>{schedule.Profissional.nome}</span>
                       <ArrowRight className='h-3 ml-auto fill-orange-400' />
                     </div>
                   </div>
