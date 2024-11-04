@@ -1,6 +1,6 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import ArrowLeft from '../../assets/arrow_left.svg?react';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getProfessionalById } from '../../services/requests/getProfessionalById';
 import { Input } from '../../components/input';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -16,7 +16,7 @@ const professionalFormSchema = z.object({
   name: z.coerce.string().min(1, 'Campo obrigatório'),
   email: z.string().email('Email incorreto'),
   contact: z.coerce.string().min(1, 'Campo obrigatório'),
-  admin: z.boolean().nullable(),
+  admin: z.boolean(),
 });
 
 type ProfessionalFormData = z.infer<typeof professionalFormSchema>;
@@ -32,17 +32,32 @@ export function ProfessionalForm() {
   });
   const professionalForm = useForm<ProfessionalFormData>({
     resolver: zodResolver(professionalFormSchema),
-    defaultValues: {},
+    defaultValues: {
+      admin: false,
+    },
   });
+  const queryClient = useQueryClient();
   const updateProfessionalMutation = useMutation({
     mutationKey: ['updateProfessional'],
     mutationFn: updateProfessional,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['professionals'],
+        exact: true,
+      });
+    },
   });
   const createProfessionalMutation = useMutation({
-    mutationKey: ['updateProfessional'],
+    mutationKey: ['createProfessional'],
     mutationFn: createProfessional,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['professionals'],
+        exact: true,
+      });
+    },
   });
-  const { reset, handleSubmit } = professionalForm;
+  const { reset, handleSubmit, control } = professionalForm;
 
   function handleReturnPreviousPage() {
     navigate('/professionals');
@@ -115,8 +130,8 @@ export function ProfessionalForm() {
               </Input.Root>
               <div>
                 <Controller
+                  control={control}
                   name='admin'
-                  defaultValue={''}
                   render={({ field }) => {
                     return (
                       <label
@@ -124,7 +139,7 @@ export function ProfessionalForm() {
                         className='flex gap-2 text-white font-medium'
                       >
                         <Switch
-                          {...field}
+                          // {...field}
                           checked={field.value}
                           onChange={field.onChange}
                           className='group relative flex h-7 w-14 cursor-pointer rounded-full bg-white/10 p-1 transition-colors duration-200 ease-in-out focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[checked]:bg-orange-400'
