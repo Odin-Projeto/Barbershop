@@ -11,6 +11,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createProfessional } from '../../services/requests/createProfessional';
 import { updateProfessional } from '../../services/requests/updateProfessional';
+import { normalizePhoneNumber } from '../../utils/normalizePhoneNumber';
 
 const professionalFormSchema = z.object({
   name: z.coerce.string().min(1, 'Campo obrigatório'),
@@ -125,7 +126,11 @@ export function ProfessionalForm() {
               </Input.Root>
               <Input.Root>
                 <Input.Label>Contato</Input.Label>
-                <Input.Field type='text' name='contact' />
+                <Input.Field
+                  type='text'
+                  name='contact'
+                  mask={normalizePhoneNumber}
+                />
                 <Input.ErrorMessage field='contact' />
               </Input.Root>
               <div>
