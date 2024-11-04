@@ -5,7 +5,9 @@ import { useNavigate } from 'react-router-dom';
 
 export function ProfileSettings() {
   const navigate = useNavigate();
-
+  function handleProfessionals() {
+    navigate('/professionals');
+  }
   function handleLogout() {
     navigate('/');
   }
@@ -54,6 +56,7 @@ export function ProfileSettings() {
           <button
             type='button'
             className='w-full flex justify-between text-gray-25 font-medium'
+            onClick={handleProfessionals}
           >
             Meus Profissionais
             <ArrowRightIcon height={16} className='fill-orange-400 ' />
