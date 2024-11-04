@@ -19,7 +19,6 @@ import { formatCurrencyToNumber } from '../../utils/formatCurrencyToNumber';
 
 const serviceTimeFormSchema = z.object({
   date: z.coerce.string().min(1, 'Campo obrigatório'),
-  duration: z.string().min(1, 'Campo obrigatório'),
   time: z.coerce.string().min(1, 'Campo obrigatório'),
 });
 
@@ -57,7 +56,6 @@ export function ScheduleFormTime() {
     defaultValues: {
       date: '',
       time: '',
-      duration: '',
     },
   });
   const { handleSubmit } = timeSelectionForm;
@@ -77,19 +75,11 @@ export function ScheduleFormTime() {
     },
   });
 
-  const durations = [
-    {
-      value: 60,
-      description: '60 minutos',
-    },
-  ];
-
   function handleSelectTime(data: ServiceTimeFormData) {
     if (currentSchedule) {
       setCurrentSchedule({
         ...currentSchedule,
         date: parse(data.date, 'dd/MM/yyyy', new Date()),
-        duration: Number(data.duration),
         time: data.time,
         id: uuid(),
       });
@@ -148,18 +138,6 @@ export function ScheduleFormTime() {
             <Select.Field name='time'>
               {times.map((time, index) => (
                 <Select.Option key={index} label={time} value={time} />
-              ))}
-            </Select.Field>
-          </Select.Root>
-          <Select.Root>
-            <Select.Label>Duração</Select.Label>
-            <Select.Field name='duration'>
-              {durations.map((duration, index) => (
-                <Select.Option
-                  key={index}
-                  label={duration.description}
-                  value={duration.value.toString()}
-                />
               ))}
             </Select.Field>
           </Select.Root>
