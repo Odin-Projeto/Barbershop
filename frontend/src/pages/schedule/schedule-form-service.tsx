@@ -98,6 +98,11 @@ export function ScheduleFormService() {
           <p className='text-gray-25'>
             Defina as informações do serviço realizado
           </p>
+          <Input.Root>
+            <Input.Label>Nome do cliente</Input.Label>
+            <Input.Field name='name' type='text' />
+            <Input.ErrorMessage field='name' />
+          </Input.Root>
           <Select.Root>
             <Select.Label>Serviço</Select.Label>
             <Select.Field name='idService'>
