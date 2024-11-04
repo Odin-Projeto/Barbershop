@@ -1,5 +1,5 @@
 import { api } from '../../utils';
-import { Professional } from './getProfessionals';
+import { Professional } from './getProfessionalById';
 import { Service } from './getServices';
 
 export type Schedule = {
