@@ -21,6 +21,7 @@ import { formatCurrencyToNumber } from '../../utils/formatCurrencyToNumber';
 const serviceFormSchema = z.object({
   idService: z.string().min(1, 'Campo obrigatório'),
   idProfessional: z.string().min(1, 'Campo obrigatório'),
+  name: z.string().min(1, 'Campo obrigatório'),
   commission: z.string(),
   value: z.string(),
 });
@@ -38,6 +39,7 @@ export function ScheduleFormService() {
     defaultValues: {
       idService: currentSchedule?.idService || '',
       idProfessional: currentSchedule?.idProfessional || '1 ',
+      name: '',
     },
   });
   const { handleSubmit, watch, setValue } = serviceSelectionForm;
