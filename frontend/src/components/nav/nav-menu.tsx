@@ -3,9 +3,13 @@ import HomeIcon from '../../assets/home.svg?react';
 import MenuIcon from '../../assets/menu.svg?react';
 import { useMenu } from './hooks/useMenu';
 import { NavLink } from 'react-router-dom';
+import { useScheduleStore } from '../../pages/schedule/store';
 
 export function NavMenu() {
   const { isVisible, isVisibleCenterButton } = useMenu();
+  const resetCurrentSchedule = useScheduleStore(
+    (state) => state.resetCurrentSchedule
+  );
 
   if (!isVisible) return;
 
@@ -32,6 +36,8 @@ export function NavMenu() {
         >
           <NavLink
             to={'new-schedule'}
+            state={{ reset: true }}
+            onClick={resetCurrentSchedule}
             className='bg-orange-400 rounded-full flex items-center justify-center h-14 w-14 shadow-sm shadow-orange-200/50 fill-slate-800'
           >
             <AddIcon height={24} />
