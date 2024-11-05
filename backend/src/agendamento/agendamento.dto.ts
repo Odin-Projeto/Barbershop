@@ -5,6 +5,7 @@ import {
   IsNumber,
   IsNumberString,
   IsOptional,
+  IsString,
 } from 'class-validator';
 
 export enum AgendamentoStatus {
@@ -18,6 +19,10 @@ export class AgendamentoDto {
   @IsNumber()
   @IsOptional()
   id: number;
+
+  @IsString()
+  @IsOptional()
+  nomeCliente: string;
 
   @IsEnum(AgendamentoStatus)
   @IsOptional()

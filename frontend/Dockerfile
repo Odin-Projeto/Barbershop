@@ -7,4 +7,4 @@ RUN apk add git
 
 CMD npm i && npm run dev
 
-EXPOSE 3000
+EXPOSE 5173

@@ -26,6 +26,7 @@ export class AgendamentoService {
   async updateAgendamento(
     id: string,
     {
+      nomeCliente,
       comissao_profissional,
       dataHora,
       profissional_id,
@@ -40,6 +41,7 @@ export class AgendamentoService {
       },
       data: {
         ...(status && { status }),
+        ...(nomeCliente && { nomeCliente }),
         ...(dataHora && { dataHora }),
         ...(valor && { valor }),
         ...(comissao_profissional && { comissao_profissional }),
@@ -57,6 +59,7 @@ export class AgendamentoService {
     profissional_id,
     status,
     valor,
+    nomeCliente,
     servico_id,
     id,
   }: FetchAgendamentoDto) {
@@ -70,6 +73,7 @@ export class AgendamentoService {
         ...(profissional_id && { profissional_id: Number(profissional_id) }),
         ...(servico_id && { servico_id: Number(servico_id) }),
         ...(status && { status: { contains: status } }),
+        ...(nomeCliente && { nomeCliente: { contains: nomeCliente } }),
         ...(valor && { valor: Number(valor) }),
         status: { not: 'CANCELADO' },
       },
