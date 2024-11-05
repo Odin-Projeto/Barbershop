@@ -30,7 +30,6 @@ export class ServicoController {
 
   @Get()
   async fetchServico(@Query() filter: FetchServicoDto) {
-    console.log('ooiiiii');
     const fetchedServico = await this.servicoService.fetchServico(filter);
 
     return fetchedServico;
