@@ -60,7 +60,7 @@ export function ScheduleFormService() {
   function handleSelectService(data: ServiceFormData) {
     setCurrentSchedule({
       ...data,
-      commission: Number(data.commission),
+      commission: Number(selectedService?.porcentagem_comissao),
       value: formatCurrencyToNumber(data.value),
     });
     handleNextStep();

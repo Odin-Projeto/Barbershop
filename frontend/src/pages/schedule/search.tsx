@@ -114,7 +114,7 @@ export function Search() {
                             : 'bg-yellow-400',
                         ].join(' ')}
                       ></div>
-                      <span>{schedule.clienteNome}</span>
+                      <span>{schedule.nomeCliente}</span>
                       <ArrowRight className='h-3 ml-auto fill-orange-400' />
                     </div>
                   </div>
