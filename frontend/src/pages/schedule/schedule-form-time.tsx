@@ -94,7 +94,7 @@ export function ScheduleFormTime() {
         status: 'MARCADO',
         valor: formatCurrencyToNumber(currentSchedule.value ?? 0),
       });
-      navigate('/search-schedules');
+      navigate('/home');
     }
   }
 
