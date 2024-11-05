@@ -10,12 +10,14 @@ import { getScheduleById } from '../../services/requests/getScheduleById';
 import { formatTime, normalizeCurrency } from '../../utils';
 import { confirmSchedule } from '../../services/requests/confirmSchedule';
 import { cancelSchedule } from '../../services/requests/cancelSchedule';
+import { useState } from 'react';
 
 export function ConfirmSchedule() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const id = searchParams.get('id');
   const { Modal, handleOpenModal, handleCloseModal } = useModal();
+  const [action, setAction] = useState('CONFIRM');
   const { data: schedule } = useQuery({
     queryKey: ['schedule'],
     queryFn: () => getScheduleById(Number(id || 0)),
@@ -44,6 +46,10 @@ export function ConfirmSchedule() {
 
   function handleReturnPreviousPage() {
     navigate('/home');
+  }
+  function handleChangeAction(newAction: string) {
+    setAction(newAction);
+    handleOpenModal();
   }
   function handleConfirmSchedule() {
     confirmScheduleMutation.mutate(Number(id ?? 0));
@@ -159,7 +165,7 @@ export function ConfirmSchedule() {
             className='w-full'
             variant='danger'
             outline
-            onClick={handleOpenModal}
+            onClick={() => handleChangeAction('CANCEL')}
           >
             Desmarcar
           </Button>
@@ -171,17 +177,15 @@ export function ConfirmSchedule() {
                 #{schedule.id}
               </h6>
               <Button
-                variant={
-                  schedule.status === 'CONFIRMADO' ? 'danger' : 'success'
-                }
+                variant={action === 'CONFIRM' ? 'success' : 'danger'}
                 className='mt-8 w-full'
                 onClick={
-                  schedule.status === 'CONFIRMADO'
-                    ? handleUncheckSchedule
-                    : handleConfirmSchedule
+                  action === 'CONFIRM'
+                    ? handleConfirmSchedule
+                    : handleUncheckSchedule
                 }
               >
-                {schedule.status === 'CONFIRMADO' ? 'Desmarcar' : 'Confirmar'}
+                {action === 'CONFIRM' ? 'Confirmar' : 'Desmarcar'}
               </Button>
             </div>
           </div>
@@ -191,14 +195,14 @@ export function ConfirmSchedule() {
             <Button
               className='w-full'
               variant='success'
-              onClick={handleOpenModal}
+              onClick={() => handleChangeAction('CONFIRM')}
             >
               Confirmar
             </Button>
             <Button
               className='w-full'
               variant='danger'
-              onClick={handleOpenModal}
+              onClick={() => handleChangeAction('CANCEL')}
             >
               Desmarcar
             </Button>
