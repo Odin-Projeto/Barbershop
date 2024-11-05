@@ -2,6 +2,7 @@ import { create } from 'zustand';
 
 type Schedule = {
   id?: string | null;
+  name: string;
   idService: string;
   idProfessional: string;
   date?: Date;

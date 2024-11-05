@@ -6,6 +6,7 @@ export type Schedule = {
   id: number;
   status: string;
   dataHora: Date;
+  clienteNome: string;
   valor: number;
   comissao_profissional: number;
   profissional_id: number;

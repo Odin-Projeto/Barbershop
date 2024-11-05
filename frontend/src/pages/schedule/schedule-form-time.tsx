@@ -93,6 +93,7 @@ export function ScheduleFormTime() {
         servico_id: Number(currentSchedule.idService),
         status: 'MARCADO',
         valor: formatCurrencyToNumber(currentSchedule.value ?? 0),
+        clienteNome: currentSchedule.name,
       });
       navigate('/home');
     }

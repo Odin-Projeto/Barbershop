@@ -163,7 +163,7 @@ export function ScheduleHome() {
                           : 'bg-yellow-400',
                       ].join(' ')}
                     ></div>
-                    <span>{schedule.Profissional.nome}</span>
+                    <span>{schedule.clienteNome}</span>
                     <ArrowRight className='h-3 ml-auto fill-orange-400' />
                   </div>
                 </div>
